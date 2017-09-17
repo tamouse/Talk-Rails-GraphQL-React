@@ -1,0 +1,9 @@
+{
+  "name": "Talk-Rails-GraphQL-React",
+  "version": "1.0.0",
+  "description": "Presentation about writing a React client using ApolloClient to talk GraphQL to a Rails Backend",
+  "main": "index.html",
+  "repository": "git@github.com:tamouse/Talk-Rails-GraphQL-React.git",
+  "author": "Tamara Temple <tamouse@gmail.com>",
+  "license": "MIT"
+}
