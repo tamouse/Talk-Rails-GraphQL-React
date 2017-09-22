@@ -1,0 +1,76 @@
+---
+layout: slide
+---
+
+<section>
+
+  <section>
+    <h3>let's look at the viewer type</h3>
+  </section>
+
+  <section>
+    <h4>What is the Viewer?</h4>
+    <ul>
+      <li class="fragment">The Viewer is either a logged in User</li>
+      <li class="fragment">or an anonymous user</li>
+      <li class="fragment">aka "NullUser"</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>Why?</h4>
+    <p class="fragment">authorization</p>
+    <ul>
+      <li class="fragment">All published posts can be viewed by any
+	visitor</li>
+      <li class="fragment">Only a post's author can modify a post</li>
+      <li class="fragment">(really: create, update, publish, or delete)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>The Viewer type provides the information we need to make this
+      work</h4>
+    <pre><code>Types::ViewerType = GraphQL::ObjectType.define do
+  name "Viewer"
+  field :id, !types.ID, hash_key: :uuid
+  field :name, !types.String
+  field :my_posts, types[Types::PostType] do
+    resolve ->(obj, _, _) { obj.posts }
+  end
+  field :public_posts, types[Types::PostType] do
+    resolve ->(_,_,_){ Post.published }
+  end
+  field :all_authors, types[Types::UserType] do
+    resolve ->(_,_,_){ User.all }
+  end
+end</code></pre>
+  </section>
+
+  <section>
+    <p>On a big system with lots of data<br>
+      we're not going to want to return<br>
+      literally <em>everything</em> like that.
+    </p>
+
+    <p class="fragment">
+      Pagination is provided for in the library.
+    </p>
+
+    <p class="fragment">
+      But not in my example
+    </p>
+
+    <p class="fragment">
+      ... yet
+    </p>
+  </section>
+
+  <section>
+    <p>
+      Other types are probably less interesting.
+    </p>
+  </section>
+
+
+</section>

@@ -1,0 +1,79 @@
+---
+layout: slide
+---
+
+<section>
+
+  <section>
+    <h3>setting up the apollo client</h3>
+  </section>
+
+  <section>
+    <h4>define a client</h4>
+    <ul>
+      <li class="fragment">Define a client to pass to the Apollo Provider</li>
+      <li class="fragment">Declares the network interface to talk to
+	the graphql API</li>
+      <li class="fragment">Can be used to inject Authorization headers</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>create the network interface</h4>
+    <pre><code>import {createNetworkInterface} from 'react-apollo'
+
+const networkInterface = createNetworkInterface({
+  uri: "/graphql",
+})</code></pre>
+  </section>
+
+  <section>
+    <h4>network interface middleware</h4>
+    <pre><code>networkInterface.use([{
+  applyMiddleware(req, next) {
+    let token = window.sessionStorage.getItem('token');
+    if (token) {
+      if (!req.options.headers) {
+        req.options.headers = {};
+      }
+      req.options.headers.authorization = `Bearer ${token}`
+    }
+    next();
+  }
+}]);</code></pre>
+  </section>
+
+  <section>
+    <h4>create the client</h4>
+    <pre><code>const client = new ApolloClient({
+  networkInterface,
+})</code></pre>
+  </section>
+
+
+  <section>
+    <h3>wrapping the apollo provider</h3>
+    <p>Much like you wrap Redux Store providers, you wrap the Apollo
+      Provider around the application</p>
+    <p class="fragment">Apollo Provider can take the place of a lot
+      of your redux store needs</p>
+    <p class="fragment">it uses Redux under the hood</p>
+    <p class="fragment">Even better in v. 2</p>
+  </section>
+
+  <section>
+    <h4>wrap the app</h4>
+    <pre><code><span class="gold">&lt;ApolloProvider client={client}&gt;</span>
+  &lt;BrowserRouter&gt;
+    &lt;Layout&gt;
+      &lt;Route exact path="/" component={WhoAmI}/&gt;
+      &lt;Route exact path="/login" component={LogIn}/&gt;
+      &lt;Route exact path="/signup" component={SignUp}/&gt;
+      &lt;Route exact path="/logout" component={LogOut}/&gt;
+      &lt;Route exact path="/posts" component={PostsIndex}/&gt;
+    &lt;/Layout&gt;
+  &lt;/BrowserRouter&gt;
+<span class="gold">&lt;/ApolloProvider&gt;</span></code></pre>
+  </section>
+
+</section>

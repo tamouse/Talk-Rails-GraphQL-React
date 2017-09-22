@@ -1,0 +1,104 @@
+---
+layout: slide
+---
+
+<section>
+  <section>
+    <h3>client-side</h3>
+    <h4 class="fragment">have not gotten as far with the sample</h4>
+    <h4 class="fragment">
+      at work have written lots of stuff
+    </h4>
+    <h3 class="fragment">having so much fun!</h3>
+    <h4 class="fragment">no, really</h4>
+  </section>
+
+  <section>
+    <h3>Learning React</h3>
+    <ul>
+      <li class="fragment">taking classes for the past 3-4 years</li>
+      <li class="fragment">little learning samples</li>
+      <li class="fragment">some project exposure</li>
+      <li class="fragment">BUT THERE'S NOTHING LIKE TOTAL IMMERSION</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>initial obstacles</h4>
+    <ul>
+      <li class="fragment">front end dev left</li>
+      <li class="fragment">ancient legacy app (&gt; 10 yo)</li>
+      <li class="fragment">21,000 lines of non-vendor js</li>
+      <li class="fragment">jquery legacy js spread across the app</li>
+      <li class="fragment">react rails components in ./app/assets</li>
+      <li class="fragment">webpack 1 rails components in ./webpack</li>
+      <li class="fragment">set up to add yet <em>another</em> way of
+	integrating react</li>
+      <li class="fragment">was not passing tests</li>
+      <li class="fragment">no JS unit tests</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>other constraints</h4>
+    <ul>
+      <li class="fragment">had to be incremental (no starting from scratch)</li>
+      <li class="fragment">one rails view only to start</li>
+      <li class="fragment">UX same as original modulo incremental improvements</li>
+      <li class="fragment">must be delivered behind a guard</li>
+      <li class="fragment">no super long branch diversions or
+	skipping CI</li>
+      <li class="fragment">no breaking existing stuff</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>extra special funtiem stuph</h4>
+    <ul>
+      <li class="fragment">no one else on project knew any of this
+	stuff either</li>
+      <li class="fragment">another team member given the same sort of
+	assignment for the ReactNative mobile app</li>
+    </ul>
+  </section>
+  <section>
+    <h4>architecture (well, sorta)</h4>
+    <ul>
+      <li class="fragment">webpack 2 and associated effluvia</li>
+      <li class="fragment">react 15+</li>
+      <li class="fragment">react router 4</li>
+      <li class="fragment">apollo client</li>
+      <li class="fragment">jest, eslint</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>initial approach</h4>
+    <ul>
+      <li class="fragment">step back to zero</li>
+      <li class="fragment">find out what was failing by incrementally
+      adding stuff</li>
+      <li class="fragment">create application layout for the app</li>
+      <li class="fragment">write tests, get CI Green</li>
+      <li class="fragment">figure out how to deliver bundles to
+	production</li>
+      <li class="fragment">document the heck out of it all</li>
+      <li class="fragment">took maybe about 3 weeks</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>own goals established</h4>
+    <ul>
+      <li class="fragment">web client will exclusively use graphql api</li>
+      <li class="fragment">all clients, web, mobile, public api
+	offerings, will be on same footing with the backend</li>
+      <li class="fragment">api will be publicly offered (might be a
+      fee, not my call)</li>
+      <li class="fragment">web and mobile will share components
+      eventually and opportunistically</li>
+      <li class="fragment">web client will not use any external JS</li>
+    </ul>
+  </section>
+
+</section>

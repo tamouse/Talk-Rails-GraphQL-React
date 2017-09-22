@@ -1,0 +1,162 @@
+---
+---
+
+<section>
+  <section>
+    <h3>what is graphql?</h3>
+  </section>
+
+  <section>
+
+    <ul>
+      <li class="">a query language for your API</li>
+      <li class="fragment">runtime for fulfilling those queries</li>
+      <li class="fragment">provides a complete and understandable description of the data in your API</li>
+      <li class="fragment">gives clients the power to ask for exactly what they need</li>
+    </ul>
+
+    <small class="fragment">http://graphql.org/</small>
+
+  </section>
+
+  <section>
+    <h3>gql - graphql language</h3>
+    <p>ask for just what you need</p>
+  </section>
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  viewer {
+    posts {
+      title
+      author {
+        name
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+  </section>
+
+
+  <section>
+    <h3>queries start from a root node in the tree</h3>
+  </section>
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  <span class="gold">viewer</span> {
+    posts {
+      title
+      author {
+        name
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+  </section>
+
+  <section>
+    <p>
+      The <span class="gold">viewer</span> is the root of
+      the query tree into your graph.
+    </p>
+
+    <p class="fragment">
+      Using the current viewer (i.e. user) as the root of the query
+      let's you determine who's looking at the data.
+    </p>
+
+    <p class="fragment">
+      This is used in many cases to perform some form of authorization.
+    </p>
+  </section>
+
+  <section>
+    <h3>queries specify the things you want to see</h3>
+  </section>
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  viewer {
+    <span class="gold">posts</span> {
+      title
+      author {
+        name
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+    <p class="fragment">
+      This tells graphql to return the posts the viewer can see.
+    </p>
+  </section>
+
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  viewer {
+    posts {
+      title
+      <span class="gold">author</span> {
+        name
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+    <p class="fragment">
+      This gets the author for each post, which is a relation.
+    </p>
+  </section>
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  viewer {
+    posts {
+      title
+      author {
+        <span class="gold">name</span>
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+    <p class="fragment">
+      this indicates we only want the author's name.
+    </p>
+  </section>
+
+</section>

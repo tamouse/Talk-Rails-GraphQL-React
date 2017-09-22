@@ -1,0 +1,102 @@
+---
+layout: slide
+---
+
+<section>
+
+  <section>
+    <h3>Posts</h3>
+    <p class="fragment">The posts component gives a list of public
+      posts</p>
+    <p class="fragment">It's another React Component class</p>
+    <p class="fragment">A posts query is wrapped around the display
+      component</p>
+  </section>
+
+  <section>
+    <h4>the query</h4>
+    <p>The query is rooted at the viewer, who is established via the
+    authorization header on the server</p>
+    <pre><code>const listPosts = gql`query Posts{
+<span class="gold">viewer</span> {public_posts {id title excerpt publishedAt}}}`</code></pre>
+  </section>
+
+  <section>
+    <h4>the component</h4>
+    <p>GraphQL wrapped query components have a sort of canonical
+      form</p>
+    <pre>
+      <code>const MyComponent = props => {
+  const { data: { loading, error, <em>data_name</em> } } = props;
+  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error! {error}&lt;/p&gt;;
+  return (&lt;div&gt; { do something with the data returned } &lt;/div&gt;);
+}</code>
+    </pre>
+  </section>
+
+  <section>
+    <p>dereferencing the props passing in from graphql</p>
+    <pre>
+      <code>const MyComponent = props => {
+  <span class="gold">const { data: { loading, error, <em>data_name</em> } } = props;</span>
+  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error! {error}&lt;/p&gt;;
+  return (&lt;div&gt; { do something with the data returned } &lt;/div&gt;);
+}</code>
+    </pre>
+  </section>
+
+  <section>
+    <p><em>data_name</em> will correspond to the root of the query</p>
+    <p class="fragment">In my example query, this would be <em>viewer</em></p>
+    <pre class="fragment"><code>const listPosts = gql`query Posts{
+<span class="gold">viewer</span> {public_posts {id title excerpt publishedAt}}}`</code></pre>
+  </section>
+
+  <section>
+    <h4>structure of data returned</h4>
+    <p>The data returned is a JSON object with the structure of</p>
+    <pre>
+      <code>{
+  "data": {
+    <span class="gold">"viewer"</span>: {
+       "public_posts" : [
+         {"id": 1, "title": "A fine day",
+          "excerpt": "It started off sunny ...",
+          "publishedAt": "2017-09-21T11:00:00.000000-05:00"}
+       ]
+    }
+  }
+}</code>
+    </pre>
+  </section>
+
+  <section>
+    <h4>rendering the list</h4>
+    <pre>
+      <code>  return (
+    &lt;div&gt;
+      &lt;h1&gt;Posts&lt;/h1&gt;
+      {public_posts.map((post, idx) =&gt; {
+        return &lt;PostSummary post={post} key={idx} /&gt;
+      })}
+    &lt;/div&gt;
+  )</code>
+    </pre>
+  </section>
+
+
+  <section>
+    <h4>bringing it together</h4>
+    <p>just like we saw in the SignUp mutation, graphql wraps the
+    component with the query, and returns the high order
+      component.</p>
+    <pre>
+      <code>const PostsIndexWithData = <span class="gold">graphql(listPosts)(PostsIndex)</span>
+
+export default PostsIndexWithData</code>
+    </pre>
+  </section>
+
+</section>

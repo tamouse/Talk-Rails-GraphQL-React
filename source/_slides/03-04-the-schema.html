@@ -1,0 +1,44 @@
+---
+layout: slide
+---
+
+<section>
+
+
+  <section>
+    <h3>the graphql schema</h3>
+    <p>the mouth of the graphql system</p>
+    <ul>
+      <li class="fragment">defines the root query</li>
+      <li class="fragment">defines the root migration</li>
+      <li class="fragment">defines the root subscriptions</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>what's all this then about roots?</h3>
+  </section>
+
+  <section>
+    <h3>The graphql system defines a graph of your data</h3>
+    <ul>
+      <li class="fragment">you query a tree</li>
+      <li class="fragment">the tree needs a starting point</li>
+      <li class="fragment">the starting point is the root</li>
+      <li class="fragment">the best root for a client-facing query is
+	the viewer</li>
+      <li class="fragment">allows easy authorization</li>
+    </ul>
+    <p class="fragment"><large style="font-size: 1.2em; font-style:
+      italic;"> ... how's that for foreshadowing?</large></p>
+  </section>
+
+  <section>
+    <h4>the schema is really pretty simple</h4>
+    <pre><code>GraphqlSchema = GraphQL::Schema.define do
+  mutation(Types::MutationType)
+  query(Types::QueryType)
+end</code></pre>
+  </section>
+
+</section>

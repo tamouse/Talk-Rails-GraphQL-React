@@ -1,0 +1,42 @@
+---
+layout: slide
+---
+
+<section>
+  <section>
+    <h3>the graphql controller</h3>
+  </section>
+
+  <section>
+    <h4>it does controllerish things</h4>
+    <ul>
+      <li class="fragment">authorizes viewer (current user)</li>
+      <li class="fragment">marshalls parameters</li>
+      <li class="fragment">runs the query / mutation</li>
+      <li class="fragment">processes the result</li>
+      <li class="fragment">handles errors</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>the heart of the controller</h4>
+    <div>this is the only action needed on the controller</div>
+    <pre><code class="ruby">def execute
+  authenticate! # sets current_user
+  result = GraphqlSchema.execute(
+    params[:query],
+    variables: params[:variables],
+    context: {current_user: current_user},
+    operation_name: params[:operation_name],
+  )
+  render json: result
+end </code></pre>
+
+    <small class="fragment">
+      <a href="https://github.com/tamouse/r5_graphql_react/blob/master/app/controllers/graphql_controller.rb"
+	 target="_blank" rel="noopener nofollower">graphql_controller</a>
+      on github repo
+    </small>
+  </section>
+
+</section>

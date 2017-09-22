@@ -1,0 +1,50 @@
+---
+layout: slide
+---
+
+<section>
+
+  <section>
+    <h3>the root query</h3>
+    <p>the stomach of the graphql system</p>
+    <ul>
+      <li class="fragment">The root query is actually a data type</li>
+      <li class="fragment">It defines the "shape" of the root</li>
+      <li class="fragment">Fields below are defined by relationship
+      (don't have to be ActiveRecord, but that's the easiest to show)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>the root query can be simple, or not</h4>
+    <pre><code></code>Types::QueryType = GraphQL::ObjectType.define do
+  name "Query"
+  field :viewer, Types::ViewerType, "Viewer of data, may be an anonymous user or registered user" do
+    resolve ->(_object, _args, context) do
+      if context[:current_user].present?
+        context[:current_user]
+      else
+        NullUser.new
+      end
+    end
+  end
+end</pre>
+  </section>
+
+  <section>
+    <h4><code>graphql-ruby</code> provides a DSL</h4>
+    <ul>
+      <li class="fragment">corresponds to GraphQL terminaology</li>
+      <li class="fragment">enables descriptive schema exploration</li>
+      <li class="fragment">specify types</li>
+      <li class="fragment">specify resolvers (how data is populated)</li>
+    </ul>
+  </section>
+
+  <section>
+    <p>I hear you ...</p>
+    <p class="fragment">"What's with that NullUser??"</p>
+    <p class="fragment">more foreshadowing</p>
+  </section>
+
+</section>

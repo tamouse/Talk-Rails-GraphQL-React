@@ -1,0 +1,57 @@
+---
+layout: slide
+---
+
+<section>
+
+  <section>
+    <h3>How to organize this stuff</h3>
+    <ul>
+      <li class="fragment">client in it's own directory</li>
+      <li class="fragment">source files in <code>./client/src</code></li>
+      <li class="fragment">generic reusable components in <code>./client/src/components/</code></li>
+      <li class="fragment">pages, views, plus associated stores, under <code>./client/concerns/</code></li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>organization continued</h4>
+    <ul>
+      <li class="fragment">non-react utilities and stuff
+	under <code>./client/utils</code></li>
+      <li class="fragment">tests alongside the file under test
+	(e.g. Foo.jsx and Foo.test.jsx in same directory)</li>
+      <li class="fragment">external scss alongside file using it</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>directory structure</h4>
+    <pre><code>.client/
+  src/
+    components/
+    concerns/
+      jobs/
+        detail/
+          index.jsx
+          index.test.jsx
+          SummaryListing/
+            index.jsx
+            index.test.jsx
+            SummaryActionBar/
+              ...
+     utils/
+       ...</code></pre>
+  </section>
+
+  <section>
+    <h4>characteristics of work so far</h4>
+    <ul>
+      <li class="fragment">lots of presentational components</li>
+      <li class="fragment">several obvious sharable components</li>
+      <li class="fragment">some high order component wrappers</li>
+      <li class="fragment">not much graphql needed yet</li>
+    </ul>
+  </section>
+
+</section>

@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Learning React+Apollo+GraphQL with Rails ... all at once</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.min.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/moon.min.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/css/zenburn.min.css" media="screen" />
+
+    <link rel="stylesheet" href="/Talk-Rails-GraphQL-React/css/main.css" media="screen" />
+
+  </head>
+  <body>
+    <div class="reveal">
+      
+      <div class="slides">
+	
+<section>
+  <section>
+
+    <h4>about me</h4>
+
+    <p>Tamara Temple</p>
+    <p><i class="fa fa-envelope"></i> tamara@tamouse.org</p>
+    <p><a href="https://twitter.com/"
+	  target="_blank" rel="noopener noreferrer">
+	<i class="fa fa-twitter"></i> @tamouse
+    </a></p>
+    <p><a href="https://github.com/tamouse"
+	  target="_blank" rel="noopener noreferrer">
+	<i class="fa fa-github"></i> tamouse
+    </a></p>
+    <p><a href="https://github.com/tamouse/r5_graphql_react/"
+	  target="_blank" rel="noopener noreferrer">
+	example repo
+    </a></p>
+
+  </section>
+
+  <section>
+    <h4>a bit of history</h4>
+    <ul>
+      <li class="fragment">10+ years doing Ruby on Rails</li>
+      <li class="fragment">Started working for Reachlocal end of
+	March, '17</li>
+      <li class="fragment">Hired to be an "API-driven Rubyist"
+	<span class="fragment">...yeah</span>
+      </li>
+      <li class="fragment">Sometime in July started rebuilding front
+	end as a Standalone React client</li>
+      <li class="fragment">GraphQL was chosen API</li>
+      <li class="fragment"><code>graphql-ruby</code> was chosen Ruby server</li>
+      <li class="fragment">Apollo was chosen GQL client</li>
+    </ul>
+  </section>
+
+</section>
+
+
+<section>
+  <section>
+    <h4 class="fragment">Learning React+Apollo+GraphQL</h4>
+    <h4 class="fragment">with Rails GraphQL APi</h4>
+    <h4 class="fragment">... all at once</h4>
+  </section>
+  <section>
+    <p>or...</p>
+    <p class="fragment">
+      My experiences learning 3 deep technologies when you've been
+      doing something else for about 10 years.
+    </p>
+  </section>
+
+  <section>
+    <img src="/Talk-Rails-GraphQL-React/images/all-at-once.800.jpg"
+	 class="img-responsive"
+	 alt="person being smashed between react, graphql, and apollo
+	 above and rails below" />
+  </section>
+
+
+  <section>
+    <h4>agenda</h4>
+    <ul>
+      <li>what is graphql</li>
+      <li>server-side graphql</li>
+      <li>client-side graphql</li>
+      <li>shit i've learned</li>
+      <li>what's next</li>
+    </ul>
+  </section>
+
+
+</section>
+
+
+<section>
+  <section>
+    <h3>what is graphql?</h3>
+  </section>
+
+  <section>
+
+    <ul>
+      <li class="">a query language for your API</li>
+      <li class="fragment">runtime for fulfilling those queries</li>
+      <li class="fragment">provides a complete and understandable description of the data in your API</li>
+      <li class="fragment">gives clients the power to ask for exactly what they need</li>
+    </ul>
+
+    <small class="fragment">http://graphql.org/</small>
+
+  </section>
+
+  <section>
+    <h3>gql - graphql language</h3>
+    <p>ask for just what you need</p>
+  </section>
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  viewer {
+    posts {
+      title
+      author {
+        name
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+  </section>
+
+
+  <section>
+    <h3>queries start from a root node in the tree</h3>
+  </section>
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  <span class="gold">viewer</span> {
+    posts {
+      title
+      author {
+        name
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+  </section>
+
+  <section>
+    <p>
+      The <span class="gold">viewer</span> is the root of
+      the query tree into your graph.
+    </p>
+
+    <p class="fragment">
+      Using the current viewer (i.e. user) as the root of the query
+      let's you determine who's looking at the data.
+    </p>
+
+    <p class="fragment">
+      This is used in many cases to perform some form of authorization.
+    </p>
+  </section>
+
+  <section>
+    <h3>queries specify the things you want to see</h3>
+  </section>
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  viewer {
+    <span class="gold">posts</span> {
+      title
+      author {
+        name
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+    <p class="fragment">
+      This tells graphql to return the posts the viewer can see.
+    </p>
+  </section>
+
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  viewer {
+    posts {
+      title
+      <span class="gold">author</span> {
+        name
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+    <p class="fragment">
+      This gets the author for each post, which is a relation.
+    </p>
+  </section>
+
+  <section>
+    <pre>
+      <code class="text">
+query {
+  viewer {
+    posts {
+      title
+      author {
+        <span class="gold">name</span>
+      }
+      excerpt
+      published_date
+      comment_count
+    }
+  }
+}
+      </code>
+    </pre>
+    <p class="fragment">
+      this indicates we only want the author's name.
+    </p>
+  </section>
+
+</section>
+
+
+<section>
+
+  <section>
+    <h3>as a rails / backend person</h3>
+
+    <div class="fragment">
+      ...naturally I decided to set up the back end first.
+    </div>
+  </section>
+
+  <section>
+    <h3>graphql-ruby</h3>
+    <div>
+      A gem for providing graphql processing in a Rails environment.
+    </div>
+    <div class="fragment">
+      Just what I was looking for.
+    </div>
+    <div class="fragment">
+      ... mostly
+    </div>
+  </section>
+
+
+  <section>
+    <h4>Learning graphql-ruby</h4>
+    <ul>
+      <li>lots of new terminology</li>
+      <li>few examples to look at</li>
+      <li>difficult to translate javascript-based tutorials and docs
+      into the graphql-ruby world</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>the practice app(s)</h4>
+    <p>rather that trying to apply learning in the legacy app, I
+      wrote some "toy" learning apps to explore things</p>
+    <p class="fragment">
+      Looking at my Github account , you can probably find several of
+      them in various stages of disrepair.
+    </p>
+    <p class="fragment">
+      Most recent one involves authentication using JWTs, and signup,
+      login, and logout via GraphQL mutations. (PoC for a boss)
+    </p>
+  </section>
+
+  <section>
+    <h4>huge help from outside</h4>
+    <p>
+      Before I got to the project, they had some help from outside,
+      calling on folks from Github who've been implementing a lot with
+      GraphQL.
+    </p>
+    <p class="fragment">
+      When I discovered this I started to understand a lot more.
+    </p>
+  </section>
+
+</section>
+
+
+<section>
+
+  <section>
+    <h3>lots of parts involved</h3>
+    <p class="fragment">
+      The server side requires several things to be in place before
+      you can really get going serving up data
+    </p>
+    <p class="fragment">
+      ... i.e., situation normal for any Rails app
+    </p>
+  </section>
+
+  <section>
+    <h4>you need a controller</h4>
+    <h4 class="fragment">you need a schema</h4>
+    <h4 class="fragment">you need queries and mutations</h4>
+    <h4 class="fragment">you need do define types</h4>
+    <h4 class="fragment">you need resolvers</h4>
+    <h4 class="fragment">and that's not everything you'll need</h4>
+  </section>
+
+  <section>
+    <h4>luckily for us,<br><br> graphql-ruby provides us<br> with some generators</h4>
+  </section>
+
+  <section>
+    <ul>
+      <li><code>graphql:install</code> -- controller, schema,
+	root query and root mutation
+      <li><code>graphql:object</code> --
+	create object types for how data looks
+      </li>
+      <li>a whole bunch of other things</li>
+    </ul>
+  </section>
+
+
+  <section>
+    <pre>
+Graphql:
+  graphql:enum
+  graphql:function
+  graphql:install
+  graphql:interface
+  graphql:loader
+  graphql:mutation
+  graphql:object
+  graphql:union
+    </pre>
+  </section>
+
+</section>
+
+
+<section>
+  <section>
+    <h3>the graphql controller</h3>
+  </section>
+
+  <section>
+    <h4>it does controllerish things</h4>
+    <ul>
+      <li class="fragment">authorizes viewer (current user)</li>
+      <li class="fragment">marshalls parameters</li>
+      <li class="fragment">runs the query / mutation</li>
+      <li class="fragment">processes the result</li>
+      <li class="fragment">handles errors</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>the heart of the controller</h4>
+    <div>this is the only action needed on the controller</div>
+    <pre><code class="ruby">def execute
+  authenticate! # sets current_user
+  result = GraphqlSchema.execute(
+    params[:query],
+    variables: params[:variables],
+    context: {current_user: current_user},
+    operation_name: params[:operation_name],
+  )
+  render json: result
+end </code></pre>
+
+    <small class="fragment">
+      <a href="https://github.com/tamouse/r5_graphql_react/blob/master/app/controllers/graphql_controller.rb"
+	 target="_blank" rel="noopener nofollower">graphql_controller</a>
+      on github repo
+    </small>
+  </section>
+
+</section>
+
+
+<section>
+
+
+  <section>
+    <h3>the graphql schema</h3>
+    <p>the mouth of the graphql system</p>
+    <ul>
+      <li class="fragment">defines the root query</li>
+      <li class="fragment">defines the root migration</li>
+      <li class="fragment">defines the root subscriptions</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>what's all this then about roots?</h3>
+  </section>
+
+  <section>
+    <h3>The graphql system defines a graph of your data</h3>
+    <ul>
+      <li class="fragment">you query a tree</li>
+      <li class="fragment">the tree needs a starting point</li>
+      <li class="fragment">the starting point is the root</li>
+      <li class="fragment">the best root for a client-facing query is
+	the viewer</li>
+      <li class="fragment">allows easy authorization</li>
+    </ul>
+    <p class="fragment"><large style="font-size: 1.2em; font-style:
+      italic;"> ... how's that for foreshadowing?</large></p>
+  </section>
+
+  <section>
+    <h4>the schema is really pretty simple</h4>
+    <pre><code>GraphqlSchema = GraphQL::Schema.define do
+  mutation(Types::MutationType)
+  query(Types::QueryType)
+end</code></pre>
+  </section>
+
+</section>
+
+
+<section>
+
+  <section>
+    <h3>the root query</h3>
+    <p>the stomach of the graphql system</p>
+    <ul>
+      <li class="fragment">The root query is actually a data type</li>
+      <li class="fragment">It defines the "shape" of the root</li>
+      <li class="fragment">Fields below are defined by relationship
+      (don't have to be ActiveRecord, but that's the easiest to show)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>the root query can be simple, or not</h4>
+    <pre><code></code>Types::QueryType = GraphQL::ObjectType.define do
+  name "Query"
+  field :viewer, Types::ViewerType, "Viewer of data, may be an anonymous user or registered user" do
+    resolve ->(_object, _args, context) do
+      if context[:current_user].present?
+        context[:current_user]
+      else
+        NullUser.new
+      end
+    end
+  end
+end</pre>
+  </section>
+
+  <section>
+    <h4><code>graphql-ruby</code> provides a DSL</h4>
+    <ul>
+      <li class="fragment">corresponds to GraphQL terminaology</li>
+      <li class="fragment">enables descriptive schema exploration</li>
+      <li class="fragment">specify types</li>
+      <li class="fragment">specify resolvers (how data is populated)</li>
+    </ul>
+  </section>
+
+  <section>
+    <p>I hear you ...</p>
+    <p class="fragment">"What's with that NullUser??"</p>
+    <p class="fragment">more foreshadowing</p>
+  </section>
+
+</section>
+
+
+<section>
+
+  <section>
+    <h3>let's look at the viewer type</h3>
+  </section>
+
+  <section>
+    <h4>What is the Viewer?</h4>
+    <ul>
+      <li class="fragment">The Viewer is either a logged in User</li>
+      <li class="fragment">or an anonymous user</li>
+      <li class="fragment">aka "NullUser"</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>Why?</h4>
+    <p class="fragment">authorization</p>
+    <ul>
+      <li class="fragment">All published posts can be viewed by any
+	visitor</li>
+      <li class="fragment">Only a post's author can modify a post</li>
+      <li class="fragment">(really: create, update, publish, or delete)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>The Viewer type provides the information we need to make this
+      work</h4>
+    <pre><code>Types::ViewerType = GraphQL::ObjectType.define do
+  name "Viewer"
+  field :id, !types.ID, hash_key: :uuid
+  field :name, !types.String
+  field :my_posts, types[Types::PostType] do
+    resolve ->(obj, _, _) { obj.posts }
+  end
+  field :public_posts, types[Types::PostType] do
+    resolve ->(_,_,_){ Post.published }
+  end
+  field :all_authors, types[Types::UserType] do
+    resolve ->(_,_,_){ User.all }
+  end
+end</code></pre>
+  </section>
+
+  <section>
+    <p>On a big system with lots of data<br>
+      we're not going to want to return<br>
+      literally <em>everything</em> like that.
+    </p>
+
+    <p class="fragment">
+      Pagination is provided for in the library.
+    </p>
+
+    <p class="fragment">
+      But not in my example
+    </p>
+
+    <p class="fragment">
+      ... yet
+    </p>
+  </section>
+
+  <section>
+    <p>
+      Other types are probably less interesting.
+    </p>
+  </section>
+
+
+</section>
+
+
+<section>
+  <section>
+    <h3>the root mutation</h3>
+    <p>the liver of the graphql system</p>
+    <ul>
+      <li class="fragment">how you change data with graphql</li>
+      <li class="fragment">very similar structure</li>
+      <li class="fragment">specify changing parts</li>
+      <li class="fragment">specify what you want back</li>
+    </ul>
+  </section>
+
+
+  <section>
+    <h4>the root mutation</h4>
+    <pre><code>Types::MutationType = GraphQL::ObjectType.define do
+  name "Mutation"
+
+  field :createUser, Types::AuthenticateType do
+    description "Creates a new user"
+    argument :credentials, Types::AuthProviderCredentialsType
+    resolve Mutations::CreateUser.new
+  end
+
+  field :loginUser, Types::AuthenticateType do
+    description "Logs in a user"
+    argument :credentials, Types::AuthProviderCredentialsType
+    resolve Mutations::LoginUser.new
+  end
+end</code></pre>
+  </section>
+
+  <section>
+    <h4>fields are the types of mutations</h4>
+    <p class="fragment">
+      My project currently has two mutations
+    </p>
+    <ul>
+      <li class="fragment">create a new user</li>
+      <li class="fragment">log in a user</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>more mutations will come</h4>
+    <p class="fragment">
+      The C.U.D. parts can be handled via an "upsert" sort of mutation.
+    </p>
+    <p class="fragment">
+      I am concerned about how this might explode for very complicated
+      systems (lots of models, lots of interrelationships).
+    </p>
+  </section>
+
+  <section>
+    <h4>let's look at the create user mutation</h4>
+    <pre><code>  field :createUser, Types::AuthenticateType do
+    description "Creates a new user"
+    argument :credentials, Types::AuthProviderCredentialsType
+    resolve Mutations::CreateUser.new
+  end
+</code></pre>
+  </section>
+
+  <section>
+    <h4>the field specifies a type that is returned</h4>
+    <pre><code>field :createUser, Types::AuthenticateType do</code></pre>
+    <pre class="fragment"><code></code>Types::AuthenticateType = GraphQL::ObjectType.define do
+  name "Authenticate"
+  field :token, types.String
+  field :user, Types::UserType
+en</pre>
+  </section>
+
+  <section>
+    <h4>the field has an argument, <code>:credentials</code></h4>
+    <pre><code>argument :credentials, Types::AuthProviderCredentialsType</code></pre>
+    <pre class="fragment"><code>Types::AuthProviderCredentialsType = GraphQL::InputObjectType
+  .define do
+
+  name "AuthProviderCredentials"
+  argument :name, types.String
+  argument :email, !types.String
+  argument :password, !types.String
+end</code></pre>
+  </section>
+
+  <section>
+    <h4>the field references a resolver</h4>
+    <pre><code>resolve Mutations::CreateUser.new</code></pre>
+    <ul>
+      <li class="fragment">The resolver is a PORO</li>
+      <li class="fragment">It's doing the work you might see in an
+      controller action</li>
+      <li class="fragment">
+	The resolver is passed 3 parameters.
+	<ul>
+	  <li class="fragment">the object</li>
+	  <li class="fragment">the arguments</li>
+	  <li class="fragment">the context</li>
+	</ul>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>Mutations::CreateUser</h4>
+    <pre><code>class Mutations::CreateUser
+  def call(_obj, args, _ctx)
+    creds = args[:credentials]
+    user = User.create!(name: creds[:name],email: creds[:email],
+      password: creds[:password],
+      password_confirmation: creds[:password])
+    OpenStruct.new({
+        token: AuthToken.new.token(user),
+        user: user
+      })
+  rescue ActiveRecord::RecordInvalid => e
+    raise GraphQL::ExecutionError.new("Invalid input")
+  end
+end</code></pre>
+  </section>
+
+  <section>
+    <ul>
+      <li class="fragment">anyone can sign up</li>
+      <li class="fragment">no context (no one logged in)</li>
+      <li class="fragment">no object (it's being created)</li>
+    </ul>
+  </section>
+
+</section>
+
+
+<section>
+  <section>
+    <h3>GraphQL is a "discoverable" API</h3>
+    <h4>This means you can figure out what to call by querying it</h4>
+  </section>
+
+  <section>
+    <h4>GraphiQL tool</h4>
+    <ul>
+      <li class="fragment">a graphql "browser"</li>
+      <li class="fragment">comes packaged with graphql-ruby</li>
+      <li class="fragment">VERY useful for debugging</li>
+      <li class="fragment">also a standalone electron app</li>
+    </ul>
+
+    <p class="fragment">
+      In case you didn't get that, it's
+      <span class="fragment">graph-</span><span class="fragment">i-</span><span class="fragment">ql</span>
+      <br />
+      <span class="fragment">"Graphical"</span>
+    </p>
+  </section>
+
+</section>
+
+
+<section>
+  <section>
+    <h3>client-side</h3>
+    <h4 class="fragment">have not gotten as far with the sample</h4>
+    <h4 class="fragment">
+      at work have written lots of stuff
+    </h4>
+    <h3 class="fragment">having so much fun!</h3>
+    <h4 class="fragment">no, really</h4>
+  </section>
+
+  <section>
+    <h3>Learning React</h3>
+    <ul>
+      <li class="fragment">taking classes for the past 3-4 years</li>
+      <li class="fragment">little learning samples</li>
+      <li class="fragment">some project exposure</li>
+      <li class="fragment">BUT THERE'S NOTHING LIKE TOTAL IMMERSION</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>initial obstacles</h4>
+    <ul>
+      <li class="fragment">front end dev left</li>
+      <li class="fragment">ancient legacy app (&gt; 10 yo)</li>
+      <li class="fragment">21,000 lines of non-vendor js</li>
+      <li class="fragment">jquery legacy js spread across the app</li>
+      <li class="fragment">react rails components in ./app/assets</li>
+      <li class="fragment">webpack 1 rails components in ./webpack</li>
+      <li class="fragment">set up to add yet <em>another</em> way of
+	integrating react</li>
+      <li class="fragment">was not passing tests</li>
+      <li class="fragment">no JS unit tests</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>other constraints</h4>
+    <ul>
+      <li class="fragment">had to be incremental (no starting from scratch)</li>
+      <li class="fragment">one rails view only to start</li>
+      <li class="fragment">UX same as original modulo incremental improvements</li>
+      <li class="fragment">must be delivered behind a guard</li>
+      <li class="fragment">no super long branch diversions or
+	skipping CI</li>
+      <li class="fragment">no breaking existing stuff</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>extra special funtiem stuph</h4>
+    <ul>
+      <li class="fragment">no one else on project knew any of this
+	stuff either</li>
+      <li class="fragment">another team member given the same sort of
+	assignment for the ReactNative mobile app</li>
+    </ul>
+  </section>
+  <section>
+    <h4>architecture (well, sorta)</h4>
+    <ul>
+      <li class="fragment">webpack 2 and associated effluvia</li>
+      <li class="fragment">react 15+</li>
+      <li class="fragment">react router 4</li>
+      <li class="fragment">apollo client</li>
+      <li class="fragment">jest, eslint</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>initial approach</h4>
+    <ul>
+      <li class="fragment">step back to zero</li>
+      <li class="fragment">find out what was failing by incrementally
+      adding stuff</li>
+      <li class="fragment">create application layout for the app</li>
+      <li class="fragment">write tests, get CI Green</li>
+      <li class="fragment">figure out how to deliver bundles to
+	production</li>
+      <li class="fragment">document the heck out of it all</li>
+      <li class="fragment">took maybe about 3 weeks</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>own goals established</h4>
+    <ul>
+      <li class="fragment">web client will exclusively use graphql api</li>
+      <li class="fragment">all clients, web, mobile, public api
+	offerings, will be on same footing with the backend</li>
+      <li class="fragment">api will be publicly offered (might be a
+      fee, not my call)</li>
+      <li class="fragment">web and mobile will share components
+      eventually and opportunistically</li>
+      <li class="fragment">web client will not use any external JS</li>
+    </ul>
+  </section>
+
+</section>
+
+
+<section>
+
+  <section>
+    <h3>How to organize this stuff</h3>
+    <ul>
+      <li class="fragment">client in it's own directory</li>
+      <li class="fragment">source files in <code>./client/src</code></li>
+      <li class="fragment">generic reusable components in <code>./client/src/components/</code></li>
+      <li class="fragment">pages, views, plus associated stores, under <code>./client/concerns/</code></li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>organization continued</h4>
+    <ul>
+      <li class="fragment">non-react utilities and stuff
+	under <code>./client/utils</code></li>
+      <li class="fragment">tests alongside the file under test
+	(e.g. Foo.jsx and Foo.test.jsx in same directory)</li>
+      <li class="fragment">external scss alongside file using it</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>directory structure</h4>
+    <pre><code>.client/
+  src/
+    components/
+    concerns/
+      jobs/
+        detail/
+          index.jsx
+          index.test.jsx
+          SummaryListing/
+            index.jsx
+            index.test.jsx
+            SummaryActionBar/
+              ...
+     utils/
+       ...</code></pre>
+  </section>
+
+  <section>
+    <h4>characteristics of work so far</h4>
+    <ul>
+      <li class="fragment">lots of presentational components</li>
+      <li class="fragment">several obvious sharable components</li>
+      <li class="fragment">some high order component wrappers</li>
+      <li class="fragment">not much graphql needed yet</li>
+    </ul>
+  </section>
+
+</section>
+
+
+<section>
+  <section>
+    <h3>back to the learning repo</h3>
+    <ul>
+      <li class="fragment">React client made
+      with <code>create-react-app client</code></li>
+      <li class="fragment">Add several libraries</li>
+      <li class="fragment">Structure is a bit different than work</li>
+      <li class="fragment">Jest tests missing :'( </li>
+      <li class="fragment">Still trying to figure things out</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>internal architecture</h4>
+    <ul>
+      <li class="fragment">Client in <code>./client/</code></li>
+      <li class="fragment">Source in <code>./client/src/</code></li>
+      <li class="fragment">Tests (cough) alongside components</li>
+      <li class="fragment">Routed components as subdirs</li>
+      <li class="fragment">Utils directory as well</li>
+      <li class="fragment">Have not gotten sharable components yet</li>
+    </ul>
+  </section>
+
+
+</section>
+
+
+<section>
+
+  <section>
+    <h3>setting up the apollo client</h3>
+  </section>
+
+  <section>
+    <h4>define a client</h4>
+    <ul>
+      <li class="fragment">Define a client to pass to the Apollo Provider</li>
+      <li class="fragment">Declares the network interface to talk to
+	the graphql API</li>
+      <li class="fragment">Can be used to inject Authorization headers</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>create the network interface</h4>
+    <pre><code>import {createNetworkInterface} from 'react-apollo'
+
+const networkInterface = createNetworkInterface({
+  uri: "/graphql",
+})</code></pre>
+  </section>
+
+  <section>
+    <h4>network interface middleware</h4>
+    <pre><code>networkInterface.use([{
+  applyMiddleware(req, next) {
+    let token = window.sessionStorage.getItem('token');
+    if (token) {
+      if (!req.options.headers) {
+        req.options.headers = {};
+      }
+      req.options.headers.authorization = `Bearer ${token}`
+    }
+    next();
+  }
+}]);</code></pre>
+  </section>
+
+  <section>
+    <h4>create the client</h4>
+    <pre><code>const client = new ApolloClient({
+  networkInterface,
+})</code></pre>
+  </section>
+
+
+  <section>
+    <h3>wrapping the apollo provider</h3>
+    <p>Much like you wrap Redux Store providers, you wrap the Apollo
+      Provider around the application</p>
+    <p class="fragment">Apollo Provider can take the place of a lot
+      of your redux store needs</p>
+    <p class="fragment">it uses Redux under the hood</p>
+    <p class="fragment">Even better in v. 2</p>
+  </section>
+
+  <section>
+    <h4>wrap the app</h4>
+    <pre><code><span class="gold">&lt;ApolloProvider client={client}&gt;</span>
+  &lt;BrowserRouter&gt;
+    &lt;Layout&gt;
+      &lt;Route exact path="/" component={WhoAmI}/&gt;
+      &lt;Route exact path="/login" component={LogIn}/&gt;
+      &lt;Route exact path="/signup" component={SignUp}/&gt;
+      &lt;Route exact path="/logout" component={LogOut}/&gt;
+      &lt;Route exact path="/posts" component={PostsIndex}/&gt;
+    &lt;/Layout&gt;
+  &lt;/BrowserRouter&gt;
+<span class="gold">&lt;/ApolloProvider&gt;</span></code></pre>
+  </section>
+
+</section>
+
+
+<section>
+
+  <section>
+    <h3>establishing identity: authentication</h3>
+    <ul>
+      <li class="fragment">at first, anonymous user performs query</li>
+      <li class="fragment">sees list of published posts</li>
+      <li class="fragment">has login and signup links</li>
+      <li class="fragment">login and signup components perform mutations</li>
+      <li class="fragment">logged in users perform same query, but
+      are getting more information</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>create a user</h4>
+    <ul>
+      <li class="fragment">the "/signup" path</li>
+      <li class="fragment">the <code>SignUp.jsx</code> component</li>
+      <li class="fragment">class extending React.Component
+      implementing the SignUp form</li>
+      <li class="fragment">Apollo graphql HOC wraps the form
+	component with the mutation, passing in a mutate function</li>
+      <li class="fragment">SignUp handles the form field updates and
+	submission, calling the mutate function
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>the mutation</h4>
+    <pre><code>const signUpMutation = gql`
+mutation SignUpUser($credentials: AuthProviderCredentials) {
+  <span class="gold">createUser</span>(credentials: $credentials)
+  {token user {name email}}
+}`</code></pre>
+  </section>
+
+  <section>
+    <h4>the constructor</h4>
+    <pre>
+      <code>  constructor(props) {
+    super(props)
+    this.state = {
+      name: '',
+      email: '',
+      password: '',
+      <span class="gold">mutate: props.mutate,</span>
+    }
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }</code>
+    </pre>
+  </section>
+
+  <section>
+    <h4>handleChange</h4>
+    <pre>
+      <code>  handleChange(e) {
+    const target = e.target
+    const value = target.type === 'checkbox' ?
+      target.checked :
+      target.value
+    const name = target.name
+
+    this.setState({
+      [name]: value,
+    })
+  }</code>
+    </pre>
+  </section>
+
+  <section>
+    <h4>handleSubmit</h4>
+    <pre>
+      <code>  handleSubmit(e) {
+    e.preventDefault()
+    const credentials = { <span style="color: grey;">gather state data</span> }
+    <span class="gold">this.state.mutate({
+      variables: {credentials},
+    })</span>.then(response => {
+      let token = response.data.createUser.token
+      <span class="gold">window.sessionStorage.setItem('token', token)</span>
+    })
+  }</code>
+    </pre>
+  </section>
+
+
+  <section>
+    <h4>the render</h4>
+    <pre><code>render() {
+  if (this.state.loggedIn) return &lt;Redirect to="/"/&gt;
+  return (
+    &lt;div&gt;
+      &lt;form <span class="gold">onSubmit={this.handleSubmit}</span>>&gt;
+        &lt;div&gt;
+          &lt;label&gt;Name: &lt;input type="text" name="name"
+            value={this.state.name} <span class="gold">onChange={this.handleChange}</span>/&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;label&gt;Email: &lt;input type="email" name="email"
+            value={this.state.email} onChange={this.handleChange}/&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;label&gt;Password: &lt;input type="text" name="password"
+            value={this.state.password} onChange={this.handleChange}/&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div&gt; &lt;input type="submit"/&gt; &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  )
+}</code></pre>
+  </section>
+
+  <section>
+    <h4>where is all comes together</h4>
+    <pre>
+      <code>const SignUpWithMutation = <span class="gold">graphql(signUpMutation)(SignUp)</span>
+export default SignUpWithMutation</code>
+    </pre>
+  </section>
+
+
+  <section>
+    <h4>the caller</h4>
+    <p>Back in main application, we're importing this component and
+      invoking on on a matching route</p>
+    <pre class="fragment">
+      <code>import SignUp from './SignUp'</code>
+    </pre>
+    <pre class="fragment">
+      <code>&lt;Route exact path="/signup" component={SignUp}/&gt;</code>
+    </pre>
+  </section>
+
+  <section>
+    <h4>way back on the server side</h4>
+    <p class="fragment">The mutation is calling the <code>:createUser</code>
+      mutation</p>
+    <p class="fragment">When that completes, the new user's ID and their JWT is returned</p>
+  </section>
+
+  <section>
+    <h4>and back to the client</h4>
+    <p class="fragment">
+      the mutate promise resolves, and the token is put into session storage
+    </p>
+    <p class="fragment">because of the middleware in the network
+    interface, the "Authorization" header is set with the token</p>
+  </section>
+
+</section>
+
+
+<section>
+
+  <section>
+    <h3>Posts</h3>
+    <p class="fragment">The posts component gives a list of public
+      posts</p>
+    <p class="fragment">It's another React Component class</p>
+    <p class="fragment">A posts query is wrapped around the display
+      component</p>
+  </section>
+
+  <section>
+    <h4>the query</h4>
+    <p>The query is rooted at the viewer, who is established via the
+    authorization header on the server</p>
+    <pre><code>const listPosts = gql`query Posts{
+<span class="gold">viewer</span> {public_posts {id title excerpt publishedAt}}}`</code></pre>
+  </section>
+
+  <section>
+    <h4>the component</h4>
+    <p>GraphQL wrapped query components have a sort of canonical
+      form</p>
+    <pre>
+      <code>const MyComponent = props => {
+  const { data: { loading, error, <em>data_name</em> } } = props;
+  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error! {error}&lt;/p&gt;;
+  return (&lt;div&gt; { do something with the data returned } &lt;/div&gt;);
+}</code>
+    </pre>
+  </section>
+
+  <section>
+    <p>dereferencing the props passing in from graphql</p>
+    <pre>
+      <code>const MyComponent = props => {
+  <span class="gold">const { data: { loading, error, <em>data_name</em> } } = props;</span>
+  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error! {error}&lt;/p&gt;;
+  return (&lt;div&gt; { do something with the data returned } &lt;/div&gt;);
+}</code>
+    </pre>
+  </section>
+
+  <section>
+    <p><em>data_name</em> will correspond to the root of the query</p>
+    <p class="fragment">In my example query, this would be <em>viewer</em></p>
+    <pre class="fragment"><code>const listPosts = gql`query Posts{
+<span class="gold">viewer</span> {public_posts {id title excerpt publishedAt}}}`</code></pre>
+  </section>
+
+  <section>
+    <h4>structure of data returned</h4>
+    <p>The data returned is a JSON object with the structure of</p>
+    <pre>
+      <code>{
+  "data": {
+    <span class="gold">"viewer"</span>: {
+       "public_posts" : [
+         {"id": 1, "title": "A fine day",
+          "excerpt": "It started off sunny ...",
+          "publishedAt": "2017-09-21T11:00:00.000000-05:00"}
+       ]
+    }
+  }
+}</code>
+    </pre>
+  </section>
+
+  <section>
+    <h4>rendering the list</h4>
+    <pre>
+      <code>  return (
+    &lt;div&gt;
+      &lt;h1&gt;Posts&lt;/h1&gt;
+      {public_posts.map((post, idx) =&gt; {
+        return &lt;PostSummary post={post} key={idx} /&gt;
+      })}
+    &lt;/div&gt;
+  )</code>
+    </pre>
+  </section>
+
+
+  <section>
+    <h4>bringing it together</h4>
+    <p>just like we saw in the SignUp mutation, graphql wraps the
+    component with the query, and returns the high order
+      component.</p>
+    <pre>
+      <code>const PostsIndexWithData = <span class="gold">graphql(listPosts)(PostsIndex)</span>
+
+export default PostsIndexWithData</code>
+    </pre>
+  </section>
+
+</section>
+
+
+<section>
+  <section>
+    <h3>shit i learned</h3>
+    <h2 class="fragment">like, holy crap, there's a lot to learn</h2>
+  </section>
+
+
+
+</section>
+
+
+<section>
+
+  <section>
+
+    <h3>what's next?</h3>
+
+    <p class="fragment">???</p>
+
+  </section>
+
+</section>
+
+
+<section>
+
+  <h4>thanks!</h4>
+
+  <p><a href="https://github.com/tamouse/r5_graphql_react/"
+	target="_blank" rel="noopener noreferrer">
+      example repo
+  </a></p>
+
+  <hr/>
+
+
+  <p>Tamara Temple</p>
+  <p><i class="fa fa-envelope"></i> tamara@tamouse.org</p>
+  <p><a href="https://twitter.com/"
+	target="_blank" rel="noopener noreferrer">
+      <i class="fa fa-twitter"></i> @tamouse
+  </a></p>
+  <p><a href="https://github.com/tamouse"
+	target="_blank" rel="noopener noreferrer">
+      <i class="fa fa-github"></i> tamouse
+  </a></p>
+
+</section>
+
+
+
+      </div>
+      
+    </div>
+
+    <script src="https://use.fontawesome.com/c4419a3c1c.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/js/reveal.min.js"></script>
+    <script>
+Reveal.initialize({
+    controls: true,
+    progress: true,
+    slideNumber: true,
+    history: true,
+    keyboard: true,
+    overview: true,
+    center: true,
+    transition: "none",
+})
+    </script>
+  </body>
+</html>

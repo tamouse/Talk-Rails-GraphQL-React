@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ site.title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.min.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/{{ site.reveal.theme }}.min.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/css/{{ site.reveal.code_theme }}.min.css" media="screen" />
+
+    <link rel="stylesheet" href="{{ 'css/main.css' | relative_url }}" media="screen" />
+
+  </head>
+  <body>
+    <div class="reveal">
+      {% include slideshow-header.html %}
+      <div class="slides">
+	{{content}}
+      </div>
+      {% include slideshow-footer.html %}
+    </div>
+
+    <script src="https://use.fontawesome.com/c4419a3c1c.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/js/reveal.min.js"></script>
+    <script>
+Reveal.initialize({
+    controls: true,
+    progress: true,
+    slideNumber: true,
+    history: true,
+    keyboard: true,
+    overview: true,
+    center: true,
+    transition: "none",
+})
+    </script>
+  </body>
+</html>

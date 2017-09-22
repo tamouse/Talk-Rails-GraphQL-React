@@ -1,0 +1,136 @@
+---
+layout: slide
+---
+
+<section>
+  <section>
+    <h3>the root mutation</h3>
+    <p>the liver of the graphql system</p>
+    <ul>
+      <li class="fragment">how you change data with graphql</li>
+      <li class="fragment">very similar structure</li>
+      <li class="fragment">specify changing parts</li>
+      <li class="fragment">specify what you want back</li>
+    </ul>
+  </section>
+
+
+  <section>
+    <h4>the root mutation</h4>
+    <pre><code>Types::MutationType = GraphQL::ObjectType.define do
+  name "Mutation"
+
+  field :createUser, Types::AuthenticateType do
+    description "Creates a new user"
+    argument :credentials, Types::AuthProviderCredentialsType
+    resolve Mutations::CreateUser.new
+  end
+
+  field :loginUser, Types::AuthenticateType do
+    description "Logs in a user"
+    argument :credentials, Types::AuthProviderCredentialsType
+    resolve Mutations::LoginUser.new
+  end
+end</code></pre>
+  </section>
+
+  <section>
+    <h4>fields are the types of mutations</h4>
+    <p class="fragment">
+      My project currently has two mutations
+    </p>
+    <ul>
+      <li class="fragment">create a new user</li>
+      <li class="fragment">log in a user</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>more mutations will come</h4>
+    <p class="fragment">
+      The C.U.D. parts can be handled via an "upsert" sort of mutation.
+    </p>
+    <p class="fragment">
+      I am concerned about how this might explode for very complicated
+      systems (lots of models, lots of interrelationships).
+    </p>
+  </section>
+
+  <section>
+    <h4>let's look at the create user mutation</h4>
+    <pre><code>  field :createUser, Types::AuthenticateType do
+    description "Creates a new user"
+    argument :credentials, Types::AuthProviderCredentialsType
+    resolve Mutations::CreateUser.new
+  end
+</code></pre>
+  </section>
+
+  <section>
+    <h4>the field specifies a type that is returned</h4>
+    <pre><code>field :createUser, Types::AuthenticateType do</code></pre>
+    <pre class="fragment"><code></code>Types::AuthenticateType = GraphQL::ObjectType.define do
+  name "Authenticate"
+  field :token, types.String
+  field :user, Types::UserType
+en</pre>
+  </section>
+
+  <section>
+    <h4>the field has an argument, <code>:credentials</code></h4>
+    <pre><code>argument :credentials, Types::AuthProviderCredentialsType</code></pre>
+    <pre class="fragment"><code>Types::AuthProviderCredentialsType = GraphQL::InputObjectType
+  .define do
+
+  name "AuthProviderCredentials"
+  argument :name, types.String
+  argument :email, !types.String
+  argument :password, !types.String
+end</code></pre>
+  </section>
+
+  <section>
+    <h4>the field references a resolver</h4>
+    <pre><code>resolve Mutations::CreateUser.new</code></pre>
+    <ul>
+      <li class="fragment">The resolver is a PORO</li>
+      <li class="fragment">It's doing the work you might see in an
+      controller action</li>
+      <li class="fragment">
+	The resolver is passed 3 parameters.
+	<ul>
+	  <li class="fragment">the object</li>
+	  <li class="fragment">the arguments</li>
+	  <li class="fragment">the context</li>
+	</ul>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>Mutations::CreateUser</h4>
+    <pre><code>class Mutations::CreateUser
+  def call(_obj, args, _ctx)
+    creds = args[:credentials]
+    user = User.create!(name: creds[:name],email: creds[:email],
+      password: creds[:password],
+      password_confirmation: creds[:password])
+    OpenStruct.new({
+        token: AuthToken.new.token(user),
+        user: user
+      })
+  rescue ActiveRecord::RecordInvalid => e
+    raise GraphQL::ExecutionError.new("Invalid input")
+  end
+end</code></pre>
+  </section>
+
+  <section>
+    <ul>
+      <li class="fragment">anyone can sign up</li>
+      <li class="fragment">no context (no one logged in)</li>
+      <li class="fragment">no object (it's being created)</li>
+    </ul>
+  </section>
+
+</section>

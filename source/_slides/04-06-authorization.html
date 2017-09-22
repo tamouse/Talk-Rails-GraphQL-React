@@ -1,0 +1,157 @@
+---
+layout: slide
+---
+
+<section>
+
+  <section>
+    <h3>establishing identity: authentication</h3>
+    <ul>
+      <li class="fragment">at first, anonymous user performs query</li>
+      <li class="fragment">sees list of published posts</li>
+      <li class="fragment">has login and signup links</li>
+      <li class="fragment">login and signup components perform mutations</li>
+      <li class="fragment">logged in users perform same query, but
+      are getting more information</li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>create a user</h4>
+    <ul>
+      <li class="fragment">the "/signup" path</li>
+      <li class="fragment">the <code>SignUp.jsx</code> component</li>
+      <li class="fragment">class extending React.Component
+      implementing the SignUp form</li>
+      <li class="fragment">Apollo graphql HOC wraps the form
+	component with the mutation, passing in a mutate function</li>
+      <li class="fragment">SignUp handles the form field updates and
+	submission, calling the mutate function
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h4>the mutation</h4>
+    <pre><code>const signUpMutation = gql`
+mutation SignUpUser($credentials: AuthProviderCredentials) {
+  <span class="gold">createUser</span>(credentials: $credentials)
+  {token user {name email}}
+}`</code></pre>
+  </section>
+
+  <section>
+    <h4>the constructor</h4>
+    <pre>
+      <code>  constructor(props) {
+    super(props)
+    this.state = {
+      name: '',
+      email: '',
+      password: '',
+      <span class="gold">mutate: props.mutate,</span>
+    }
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }</code>
+    </pre>
+  </section>
+
+  <section>
+    <h4>handleChange</h4>
+    <pre>
+      <code>  handleChange(e) {
+    const target = e.target
+    const value = target.type === 'checkbox' ?
+      target.checked :
+      target.value
+    const name = target.name
+
+    this.setState({
+      [name]: value,
+    })
+  }</code>
+    </pre>
+  </section>
+
+  <section>
+    <h4>handleSubmit</h4>
+    <pre>
+      <code>  handleSubmit(e) {
+    e.preventDefault()
+    const credentials = { <span style="color: grey;">gather state data</span> }
+    <span class="gold">this.state.mutate({
+      variables: {credentials},
+    })</span>.then(response => {
+      let token = response.data.createUser.token
+      <span class="gold">window.sessionStorage.setItem('token', token)</span>
+    })
+  }</code>
+    </pre>
+  </section>
+
+
+  <section>
+    <h4>the render</h4>
+    <pre><code>render() {
+  if (this.state.loggedIn) return &lt;Redirect to="/"/&gt;
+  return (
+    &lt;div&gt;
+      &lt;form <span class="gold">onSubmit={this.handleSubmit}</span>>&gt;
+        &lt;div&gt;
+          &lt;label&gt;Name: &lt;input type="text" name="name"
+            value={this.state.name} <span class="gold">onChange={this.handleChange}</span>/&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;label&gt;Email: &lt;input type="email" name="email"
+            value={this.state.email} onChange={this.handleChange}/&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;label&gt;Password: &lt;input type="text" name="password"
+            value={this.state.password} onChange={this.handleChange}/&gt;&lt;/label&gt;
+        &lt;/div&gt;
+        &lt;div&gt; &lt;input type="submit"/&gt; &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  )
+}</code></pre>
+  </section>
+
+  <section>
+    <h4>where is all comes together</h4>
+    <pre>
+      <code>const SignUpWithMutation = <span class="gold">graphql(signUpMutation)(SignUp)</span>
+export default SignUpWithMutation</code>
+    </pre>
+  </section>
+
+
+  <section>
+    <h4>the caller</h4>
+    <p>Back in main application, we're importing this component and
+      invoking on on a matching route</p>
+    <pre class="fragment">
+      <code>import SignUp from './SignUp'</code>
+    </pre>
+    <pre class="fragment">
+      <code>&lt;Route exact path="/signup" component={SignUp}/&gt;</code>
+    </pre>
+  </section>
+
+  <section>
+    <h4>way back on the server side</h4>
+    <p class="fragment">The mutation is calling the <code>:createUser</code>
+      mutation</p>
+    <p class="fragment">When that completes, the new user's ID and their JWT is returned</p>
+  </section>
+
+  <section>
+    <h4>and back to the client</h4>
+    <p class="fragment">
+      the mutate promise resolves, and the token is put into session storage
+    </p>
+    <p class="fragment">because of the middleware in the network
+    interface, the "Authorization" header is set with the token</p>
+  </section>
+
+</section>

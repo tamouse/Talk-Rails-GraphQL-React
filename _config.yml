@@ -1,0 +1,32 @@
+title: Learning React+Apollo+GraphQL with Rails ... all at once
+subtitle: |
+  Experiencess with creating a React client using Apollo GraphQL client
+  to talk to a Rails GraphQL API, when you don't know any of those things.'
+
+author: Tamara Temple
+email: tamara@tamouse.org
+twitter: tamouse
+github: tamouse
+
+
+url: ''
+baseurl: '/Talk-Rails-GraphQL-React'
+
+source: source
+destination: docs
+
+markdown: kramdown
+kramdown:
+  parse_block_html: true
+  parse_span_html: true
+  input: GFM
+  hard_wrap: false
+
+
+reveal:
+  theme: moon
+  code_theme: zenburn
+
+
+collections:
+  - slides

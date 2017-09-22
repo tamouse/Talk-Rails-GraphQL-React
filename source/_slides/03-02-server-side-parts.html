@@ -1,0 +1,57 @@
+---
+layout: slide
+---
+
+<section>
+
+  <section>
+    <h3>lots of parts involved</h3>
+    <p class="fragment">
+      The server side requires several things to be in place before
+      you can really get going serving up data
+    </p>
+    <p class="fragment">
+      ... i.e., situation normal for any Rails app
+    </p>
+  </section>
+
+  <section>
+    <h4>you need a controller</h4>
+    <h4 class="fragment">you need a schema</h4>
+    <h4 class="fragment">you need queries and mutations</h4>
+    <h4 class="fragment">you need do define types</h4>
+    <h4 class="fragment">you need resolvers</h4>
+    <h4 class="fragment">and that's not everything you'll need</h4>
+  </section>
+
+  <section>
+    <h4>luckily for us,<br><br> graphql-ruby provides us<br> with some generators</h4>
+  </section>
+
+  <section>
+    <ul>
+      <li><code>graphql:install</code> -- controller, schema,
+	root query and root mutation
+      <li><code>graphql:object</code> --
+	create object types for how data looks
+      </li>
+      <li>a whole bunch of other things</li>
+    </ul>
+  </section>
+
+
+  <section>
+    <pre>
+Graphql:
+  graphql:enum
+  graphql:function
+  graphql:install
+  graphql:interface
+  graphql:loader
+  graphql:mutation
+  graphql:object
+  graphql:union
+    </pre>
+  </section>
+
+</section>

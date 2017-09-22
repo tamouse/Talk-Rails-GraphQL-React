@@ -1,0 +1,22 @@
+---
+---
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:600,600i|Open+Sans:400,400i,700');
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+.reveal {
+  .slides {
+    section {
+      font-family: "Open Sans", sans-serif;
+      h1,h2,h3,h4,h5,h6 {
+	font-family: "Montserrat", sans-serif;
+	text-transform: lowercase;
+      }
+
+      .gold { color: gold }
+    }
+  }
+}
