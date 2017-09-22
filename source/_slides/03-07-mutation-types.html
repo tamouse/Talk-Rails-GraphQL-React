@@ -35,7 +35,7 @@ end</code></pre>
   </section>
 
   <section>
-    <h4>fields are the types of mutations</h4>
+    <h4>fields are the different mutation operations</h4>
     <p class="fragment">
       My project currently has two mutations
     </p>
@@ -124,6 +124,63 @@ end</code></pre>
   end
 end</code></pre>
   </section>
+
+  <section>
+    <h4>Mutations::CreateUser</h4>
+    <pre><code>class Mutations::CreateUser
+  def <span class="gold">call(_obj, args, _ctx)</span>
+    creds = args[:credentials]
+    user = User.create!(name: creds[:name],email: creds[:email],
+      password: creds[:password],
+      password_confirmation: creds[:password])
+    OpenStruct.new({
+        token: AuthToken.new.token(user),
+        user: user
+      })
+  rescue ActiveRecord::RecordInvalid => e
+    raise GraphQL::ExecutionError.new("Invalid input")
+  end
+end</code></pre>
+  </section>
+
+  <section>
+    <h4>Mutations::CreateUser</h4>
+    <pre><code>class Mutations::CreateUser
+  def call(_obj, args, _ctx)
+    creds = args[:credentials]
+    user = <span class="gold">User.create!</span>(
+      name: creds[:name],email: creds[:email],
+      password: creds[:password],
+      password_confirmation: creds[:password])
+    OpenStruct.new({
+        token: AuthToken.new.token(user),
+        user: user
+      })
+  rescue ActiveRecord::RecordInvalid => e
+    raise GraphQL::ExecutionError.new("Invalid input")
+  end
+end</code></pre>
+  </section>
+
+  <section>
+    <h4>Mutations::CreateUser</h4>
+    <pre><code>class Mutations::CreateUser
+  def call(_obj, args, _ctx)
+    creds = args[:credentials]
+    user = User.create!(
+      name: creds[:name],email: creds[:email],
+      password: creds[:password],
+      password_confirmation: creds[:password])
+    <span class="gold">OpenStruct.new({
+        token: AuthToken.new.token(user),
+        user: user
+      })</span>
+  rescue ActiveRecord::RecordInvalid => e
+    raise GraphQL::ExecutionError.new("Invalid input")
+  end
+end</code></pre>
+  </section>
+
 
   <section>
     <ul>
