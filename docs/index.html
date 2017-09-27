@@ -422,7 +422,7 @@ end </code></pre>
     <p>the mouth of the graphql system</p>
     <ul>
       <li class="fragment">defines the root query</li>
-      <li class="fragment">defines the root migration</li>
+      <li class="fragment">defines the root mutation</li>
       <li class="fragment">defines the root subscriptions</li>
     </ul>
   </section>
@@ -447,10 +447,14 @@ end </code></pre>
 
   <section>
     <h4>the schema is really pretty simple</h4>
-    <pre><code>GraphqlSchema = GraphQL::Schema.define do
+    <pre><code>
+GraphqlSchema = GraphQL::Schema.define do
+
   mutation(Types::MutationType)
   query(Types::QueryType)
-end</code></pre>
+
+end
+    </code></pre>
   </section>
 
 </section>
@@ -1010,12 +1014,14 @@ const networkInterface = createNetworkInterface({
     <h4>network interface middleware</h4>
     <pre><code>networkInterface.use([{
   applyMiddleware(req, next) {
-    let token = window.sessionStorage.getItem('token');
+    <span class="gold">let token = window.sessionStorage
+      .getItem('token');</span>
     if (token) {
       if (!req.options.headers) {
         req.options.headers = {};
       }
-      req.options.headers.authorization = `Bearer ${token}`
+      <span class="gold">req.options.headers.authorization =
+        `Bearer ${token}`</span>
     }
     next();
   }
@@ -1090,9 +1096,15 @@ const networkInterface = createNetworkInterface({
   <section>
     <h4>the mutation</h4>
     <pre><code>const signUpMutation = gql`
-mutation SignUpUser($credentials: AuthProviderCredentials) {
-  <span class="gold">createUser</span>(credentials: $credentials)
-  {token user {name email}}
+
+mutation SignUpUser(
+    <span class="green">$credentials</span>: AuthProviderCredentials
+  ) {
+
+  <span class="gold">createUser</span>(credentials: <span class="green">$credentials</span>)
+
+    {token user {name email}}
+
 }`</code></pre>
   </section>
 
@@ -1135,12 +1147,17 @@ mutation SignUpUser($credentials: AuthProviderCredentials) {
     <pre>
       <code>  handleSubmit(e) {
     e.preventDefault()
-    const credentials = { <span style="color: grey;">gather state data</span> }
-    <span class="gold">this.state.mutate({
-      variables: {credentials},
-    })</span>.then(response => {
-      let token = response.data.createUser.token
-      <span class="gold">window.sessionStorage.setItem('token', token)</span>
+    const credentials = {
+      'name': this.state.name,
+      'email': this.state.password,
+      'password': this.state.password
+    }
+
+    <span class="gold">this.state.mutate({ variables: {credentials} })</span>
+
+    .then(response => {
+      let token = <span class="gold">response.data.createUser.token</span>
+      <span class="green">window.sessionStorage.setItem('token', token)</span>
     })
   }</code>
     </pre>
@@ -1176,8 +1193,13 @@ mutation SignUpUser($credentials: AuthProviderCredentials) {
   <section>
     <h4>where is all comes together</h4>
     <pre>
-      <code>const SignUpWithMutation = <span class="gold">graphql(signUpMutation)(SignUp)</span>
-export default SignUpWithMutation</code>
+      <code>
+
+const SignUpWithMutation =
+  <span class="gold">graphql(signUpMutation)(SignUp)</span>
+
+
+export default <span class="gold">SignUpWithMutation</span></code>
     </pre>
   </section>
 
@@ -1187,24 +1209,32 @@ export default SignUpWithMutation</code>
     <p>Back in main application, we're importing this component and
       invoking on on a matching route</p>
     <pre class="fragment">
-      <code>import SignUp from './SignUp'</code>
+      <code>import <span class="gold">SignUp</span> from './SignUp'</code>
     </pre>
     <pre class="fragment">
-      <code>&lt;Route exact path="/signup" component={SignUp}/&gt;</code>
+      <code>&lt;Route exact path="/signup" component={<span class="gold">SignUp</span>}/&gt;</code>
     </pre>
   </section>
 
   <section>
     <h4>way back on the server side</h4>
-    <p class="fragment">The mutation is calling the <code>:createUser</code>
+    <p class="fragment">
+      &nbsp; <br />
+      The mutation is calling the <code>:createUser</code>
       mutation</p>
-    <p class="fragment">When that completes, the new user's ID and their JWT is returned</p>
+    <p class="fragment">
+      &nbsp; <br />
+      When that completes, the new user's name and
+      email, and their JWT is returned</p>
   </section>
 
   <section>
     <h4>and back to the client</h4>
     <p class="fragment">
-      the mutate promise resolves, and the token is put into session storage
+      &nbsp; <br />
+      the mutate promise resolves, and the token is put into session
+      storage
+      <br />&nbsp;
     </p>
     <p class="fragment">because of the middleware in the network
     interface, the "Authorization" header is set with the token</p>
@@ -1228,8 +1258,18 @@ export default SignUpWithMutation</code>
     <h4>the query</h4>
     <p>The query is rooted at the viewer, who is established via the
     authorization header on the server</p>
+
     <pre><code>const listPosts = gql`query Posts{
-<span class="gold">viewer</span> {public_posts {id title excerpt publishedAt}}}`</code></pre>
+
+<span class="gold">viewer</span> {
+
+  public_posts {
+    id
+    title
+    excerpt
+    publishedAt
+
+}}}`</code></pre>
   </section>
 
   <section>
@@ -1238,10 +1278,17 @@ export default SignUpWithMutation</code>
       form</p>
     <pre>
       <code>const MyComponent = props => {
-  const { data: { loading, error, <em>data_name</em> } } = props;
+
+  const { data: {
+    loading, error, <em>data_name</em> } } = props;
+
   if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+
   if (error) return &lt;p&gt;Error! {error}&lt;/p&gt;;
-  return (&lt;div&gt; { do something with the data returned } &lt;/div&gt;);
+
+  return (&lt;div&gt;
+    { do something with the data returned }
+    &lt;/div&gt;);
 }</code>
     </pre>
   </section>
@@ -1250,10 +1297,17 @@ export default SignUpWithMutation</code>
     <p>dereferencing the props passing in from graphql</p>
     <pre>
       <code>const MyComponent = props => {
-  <span class="gold">const { data: { loading, error, <em>data_name</em> } } = props;</span>
+
+  <span class="gold">const { data: {
+    loading, error, <em>data_name</em> } } = props;</span>
+
   if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+
   if (error) return &lt;p&gt;Error! {error}&lt;/p&gt;;
-  return (&lt;div&gt; { do something with the data returned } &lt;/div&gt;);
+
+  return (&lt;div&gt;
+     { do something with the data returned }
+      &lt;/div&gt;);
 }</code>
     </pre>
   </section>
@@ -1261,8 +1315,21 @@ export default SignUpWithMutation</code>
   <section>
     <p><em>data_name</em> will correspond to the root of the query</p>
     <p class="fragment">In my example query, this would be <em>viewer</em></p>
-    <pre class="fragment"><code>const listPosts = gql`query Posts{
-<span class="gold">viewer</span> {public_posts {id title excerpt publishedAt}}}`</code></pre>
+    <pre class="fragment">
+      <code>
+const listPosts = gql`query Posts{
+
+  <span class="gold">viewer</span> {
+
+    public_posts {
+      id title excerpt
+      publishedAt
+    }
+
+}}`
+      </code>
+
+    </pre>
   </section>
 
   <section>
@@ -1273,9 +1340,11 @@ export default SignUpWithMutation</code>
   "data": {
     <span class="gold">"viewer"</span>: {
        "public_posts" : [
+
          {"id": 1, "title": "A fine day",
           "excerpt": "It started off sunny ...",
-          "publishedAt": "2017-09-21T11:00:00.000000-05:00"}
+          "publishedAt": "2017-09-21..."},
+
        ]
     }
   }
@@ -1286,14 +1355,20 @@ export default SignUpWithMutation</code>
   <section>
     <h4>rendering the list</h4>
     <pre>
-      <code>  return (
-    &lt;div&gt;
-      &lt;h1&gt;Posts&lt;/h1&gt;
-      {public_posts.map((post, idx) =&gt; {
-        return &lt;PostSummary post={post} key={idx} /&gt;
-      })}
-    &lt;/div&gt;
-  )</code>
+      <code>
+
+return (
+
+  &lt;div&gt;
+    &lt;h1&gt;Posts&lt;/h1&gt;
+
+    {<span class="gold">public_posts.map</span>((post, idx) =&gt; {
+      return &lt;PostSummary post={post} key={idx} /&gt;
+    })}
+
+  &lt;/div&gt;
+
+)</code>
     </pre>
   </section>
 
@@ -1304,9 +1379,10 @@ export default SignUpWithMutation</code>
     component with the query, and returns the high order
       component.</p>
     <pre>
-      <code>const PostsIndexWithData = <span class="gold">graphql(listPosts)(PostsIndex)</span>
+      <code>const <span class="green">PostsIndexWithData</span> =
+  <span class="gold">graphql(listPosts)(PostsIndex)</span>
 
-export default PostsIndexWithData</code>
+export default <span class="green">PostsIndexWithData</span></code>
     </pre>
   </section>
 
@@ -1379,8 +1455,8 @@ Reveal.initialize({
     history: true,
     keyboard: true,
     overview: true,
-    center: true,
-    transition: "none",
+    center: false,
+    transition: "fade",
 })
     </script>
   </body>

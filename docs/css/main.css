@@ -7,5 +7,9 @@ body {
   .reveal .slides section h1, .reveal .slides section h2, .reveal .slides section h3, .reveal .slides section h4, .reveal .slides section h5, .reveal .slides section h6 {
     font-family: "Montserrat", sans-serif;
     text-transform: lowercase; }
+  .reveal .slides section pre code {
+    font-size: 1.2em; }
   .reveal .slides section .gold {
     color: gold; }
+  .reveal .slides section .green {
+    color: aquamarine; }

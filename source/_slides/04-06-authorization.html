@@ -34,9 +34,15 @@ layout: slide
   <section>
     <h4>the mutation</h4>
     <pre><code>const signUpMutation = gql`
-mutation SignUpUser($credentials: AuthProviderCredentials) {
-  <span class="gold">createUser</span>(credentials: $credentials)
-  {token user {name email}}
+
+mutation SignUpUser(
+    <span class="green">$credentials</span>: AuthProviderCredentials
+  ) {
+
+  <span class="gold">createUser</span>(credentials: <span class="green">$credentials</span>)
+
+    {token user {name email}}
+
 }`</code></pre>
   </section>
 
@@ -79,12 +85,17 @@ mutation SignUpUser($credentials: AuthProviderCredentials) {
     <pre>
       <code>  handleSubmit(e) {
     e.preventDefault()
-    const credentials = { <span style="color: grey;">gather state data</span> }
-    <span class="gold">this.state.mutate({
-      variables: {credentials},
-    })</span>.then(response => {
-      let token = response.data.createUser.token
-      <span class="gold">window.sessionStorage.setItem('token', token)</span>
+    const credentials = {
+      'name': this.state.name,
+      'email': this.state.password,
+      'password': this.state.password
+    }
+
+    <span class="gold">this.state.mutate({ variables: {credentials} })</span>
+
+    .then(response => {
+      let token = <span class="gold">response.data.createUser.token</span>
+      <span class="green">window.sessionStorage.setItem('token', token)</span>
     })
   }</code>
     </pre>
@@ -120,8 +131,13 @@ mutation SignUpUser($credentials: AuthProviderCredentials) {
   <section>
     <h4>where is all comes together</h4>
     <pre>
-      <code>const SignUpWithMutation = <span class="gold">graphql(signUpMutation)(SignUp)</span>
-export default SignUpWithMutation</code>
+      <code>
+
+const SignUpWithMutation =
+  <span class="gold">graphql(signUpMutation)(SignUp)</span>
+
+
+export default <span class="gold">SignUpWithMutation</span></code>
     </pre>
   </section>
 
@@ -131,24 +147,32 @@ export default SignUpWithMutation</code>
     <p>Back in main application, we're importing this component and
       invoking on on a matching route</p>
     <pre class="fragment">
-      <code>import SignUp from './SignUp'</code>
+      <code>import <span class="gold">SignUp</span> from './SignUp'</code>
     </pre>
     <pre class="fragment">
-      <code>&lt;Route exact path="/signup" component={SignUp}/&gt;</code>
+      <code>&lt;Route exact path="/signup" component={<span class="gold">SignUp</span>}/&gt;</code>
     </pre>
   </section>
 
   <section>
     <h4>way back on the server side</h4>
-    <p class="fragment">The mutation is calling the <code>:createUser</code>
+    <p class="fragment">
+      &nbsp; <br />
+      The mutation is calling the <code>:createUser</code>
       mutation</p>
-    <p class="fragment">When that completes, the new user's ID and their JWT is returned</p>
+    <p class="fragment">
+      &nbsp; <br />
+      When that completes, the new user's name and
+      email, and their JWT is returned</p>
   </section>
 
   <section>
     <h4>and back to the client</h4>
     <p class="fragment">
-      the mutate promise resolves, and the token is put into session storage
+      &nbsp; <br />
+      the mutate promise resolves, and the token is put into session
+      storage
+      <br />&nbsp;
     </p>
     <p class="fragment">because of the middleware in the network
     interface, the "Authorization" header is set with the token</p>

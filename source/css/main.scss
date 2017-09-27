@@ -15,8 +15,13 @@ body {
 	font-family: "Montserrat", sans-serif;
 	text-transform: lowercase;
       }
-
-      .gold { color: gold }
+      pre {
+	code {
+	  font-size: 1.2em;
+	}
+      }
+      .gold { color: gold; }
+      .green { color: aquamarine; }
     }
   }
 }

@@ -31,12 +31,14 @@ const networkInterface = createNetworkInterface({
     <h4>network interface middleware</h4>
     <pre><code>networkInterface.use([{
   applyMiddleware(req, next) {
-    let token = window.sessionStorage.getItem('token');
+    <span class="gold">let token = window.sessionStorage
+      .getItem('token');</span>
     if (token) {
       if (!req.options.headers) {
         req.options.headers = {};
       }
-      req.options.headers.authorization = `Bearer ${token}`
+      <span class="gold">req.options.headers.authorization =
+        `Bearer ${token}`</span>
     }
     next();
   }

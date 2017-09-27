@@ -17,8 +17,18 @@ layout: slide
     <h4>the query</h4>
     <p>The query is rooted at the viewer, who is established via the
     authorization header on the server</p>
+
     <pre><code>const listPosts = gql`query Posts{
-<span class="gold">viewer</span> {public_posts {id title excerpt publishedAt}}}`</code></pre>
+
+<span class="gold">viewer</span> {
+
+  public_posts {
+    id
+    title
+    excerpt
+    publishedAt
+
+}}}`</code></pre>
   </section>
 
   <section>
@@ -27,10 +37,17 @@ layout: slide
       form</p>
     <pre>
       <code>const MyComponent = props => {
-  const { data: { loading, error, <em>data_name</em> } } = props;
+
+  const { data: {
+    loading, error, <em>data_name</em> } } = props;
+
   if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+
   if (error) return &lt;p&gt;Error! {error}&lt;/p&gt;;
-  return (&lt;div&gt; { do something with the data returned } &lt;/div&gt;);
+
+  return (&lt;div&gt;
+    { do something with the data returned }
+    &lt;/div&gt;);
 }</code>
     </pre>
   </section>
@@ -39,10 +56,17 @@ layout: slide
     <p>dereferencing the props passing in from graphql</p>
     <pre>
       <code>const MyComponent = props => {
-  <span class="gold">const { data: { loading, error, <em>data_name</em> } } = props;</span>
+
+  <span class="gold">const { data: {
+    loading, error, <em>data_name</em> } } = props;</span>
+
   if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+
   if (error) return &lt;p&gt;Error! {error}&lt;/p&gt;;
-  return (&lt;div&gt; { do something with the data returned } &lt;/div&gt;);
+
+  return (&lt;div&gt;
+     { do something with the data returned }
+      &lt;/div&gt;);
 }</code>
     </pre>
   </section>
@@ -50,8 +74,21 @@ layout: slide
   <section>
     <p><em>data_name</em> will correspond to the root of the query</p>
     <p class="fragment">In my example query, this would be <em>viewer</em></p>
-    <pre class="fragment"><code>const listPosts = gql`query Posts{
-<span class="gold">viewer</span> {public_posts {id title excerpt publishedAt}}}`</code></pre>
+    <pre class="fragment">
+      <code>
+const listPosts = gql`query Posts{
+
+  <span class="gold">viewer</span> {
+
+    public_posts {
+      id title excerpt
+      publishedAt
+    }
+
+}}`
+      </code>
+
+    </pre>
   </section>
 
   <section>
@@ -62,9 +99,11 @@ layout: slide
   "data": {
     <span class="gold">"viewer"</span>: {
        "public_posts" : [
+
          {"id": 1, "title": "A fine day",
           "excerpt": "It started off sunny ...",
-          "publishedAt": "2017-09-21T11:00:00.000000-05:00"}
+          "publishedAt": "2017-09-21..."},
+
        ]
     }
   }
@@ -75,14 +114,20 @@ layout: slide
   <section>
     <h4>rendering the list</h4>
     <pre>
-      <code>  return (
-    &lt;div&gt;
-      &lt;h1&gt;Posts&lt;/h1&gt;
-      {public_posts.map((post, idx) =&gt; {
-        return &lt;PostSummary post={post} key={idx} /&gt;
-      })}
-    &lt;/div&gt;
-  )</code>
+      <code>
+
+return (
+
+  &lt;div&gt;
+    &lt;h1&gt;Posts&lt;/h1&gt;
+
+    {<span class="gold">public_posts.map</span>((post, idx) =&gt; {
+      return &lt;PostSummary post={post} key={idx} /&gt;
+    })}
+
+  &lt;/div&gt;
+
+)</code>
     </pre>
   </section>
 
@@ -93,9 +138,10 @@ layout: slide
     component with the query, and returns the high order
       component.</p>
     <pre>
-      <code>const PostsIndexWithData = <span class="gold">graphql(listPosts)(PostsIndex)</span>
+      <code>const <span class="green">PostsIndexWithData</span> =
+  <span class="gold">graphql(listPosts)(PostsIndex)</span>
 
-export default PostsIndexWithData</code>
+export default <span class="green">PostsIndexWithData</span></code>
     </pre>
   </section>
 

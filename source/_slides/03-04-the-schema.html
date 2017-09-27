@@ -10,7 +10,7 @@ layout: slide
     <p>the mouth of the graphql system</p>
     <ul>
       <li class="fragment">defines the root query</li>
-      <li class="fragment">defines the root migration</li>
+      <li class="fragment">defines the root mutation</li>
       <li class="fragment">defines the root subscriptions</li>
     </ul>
   </section>
@@ -35,10 +35,14 @@ layout: slide
 
   <section>
     <h4>the schema is really pretty simple</h4>
-    <pre><code>GraphqlSchema = GraphQL::Schema.define do
+    <pre><code>
+GraphqlSchema = GraphQL::Schema.define do
+
   mutation(Types::MutationType)
   query(Types::QueryType)
-end</code></pre>
+
+end
+    </code></pre>
   </section>
 
 </section>
